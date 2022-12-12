@@ -47,7 +47,7 @@ More info
 
 ## Architecture & Components
 
-![C7 Architecture & Components]("https://raw.githubusercontent.com/camunda-community-hub/camunda-7-helm-profiles/44e176e1be9ed8149270973c235aaa4f119ce9cb/static/c7-components.jpg")
+![C7 Architecture & Components](https://raw.githubusercontent.com/camunda-community-hub/camunda-7-helm-profiles/44e176e1be9ed8149270973c235aaa4f119ce9cb/static/c7-components.jpg)
 
 
 ### Components
@@ -65,7 +65,7 @@ More info
 - Docker
 
 
-Goals
+### Goals
 - [X] Camunda 7 BPMN, DMN engine, and Webapps, RestAPI, Swagger
 - [X] Camunda Optimize
 - [X] Metrics (Prometheus, Graphana)
