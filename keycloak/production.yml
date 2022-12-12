@@ -1,0 +1,10 @@
+# Camunda Keycloak Identity Provider Plugin
+plugin.identity.keycloak:
+  keycloakIssuerUrl: https://camunda-keycloak/auth/realms/camunda
+  keycloakAdminUrl: https://camunda-keycloak/auth/admin/realms/camunda
+  clientId: camunda-identity-service
+  clientSecret: 12345678-abcd-efgh-ijkl-123456789012
+  useUsernameAsCamundaUserId: true
+  useGroupPathAsCamundaGroupId: true
+  administratorGroupName: camunda-admin
+  disableSSLCertificateValidation: true

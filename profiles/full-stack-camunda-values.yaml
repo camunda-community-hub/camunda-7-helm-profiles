@@ -1,0 +1,154 @@
+# Chart values for the Camunda Platform 8 Helm chart.
+# This file deliberately contains only the values that differ from the defaults.
+# For changes and documentation, use your favorite diff tool to compare it with:
+# https://github.com/camunda/camunda-platform-helm/blob/main/charts/camunda-platform/values.yaml
+
+# Custom values.yaml
+
+general:
+  fullnameOverride: camunda-bpm-platform
+  replicaCount: 1
+
+image:
+  name: camunda/camunda-bpm-platform
+  tag: run-latest
+  command: ['./camunda.sh']
+  args: ['--production','--webapps','--rest','--swaggerui','--example']
+  # command: ["/bin/sh"]
+  # args: ["-c", "./camunda.sh --extraClassPath=/mylib"]
+
+extraEnvs:
+- name: DB_VALIDATE_ON_BORROW
+  value: "false"
+
+initContainers:
+  - name: install-camunda-keycloak-jar
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "wget https://repo1.maven.org/maven2/org/camunda/bpm/extension/camunda-platform-7-keycloak-run/7.17.0/camunda-platform-7-keycloak-run-7.17.0.jar -O /mylib/camunda-platform-7-keycloak-run-7.17.0.jar"]
+    # args: ["-c", "wget https://repo1.maven.org/maven2/org/camunda/bpm/extension/camunda-platform-7-keycloak-run/7.17.0/camunda-platform-7-keycloak-run-7.17.0.jar -O /mylib/camunda-platform-7-keycloak-run-7.17.0.jar
+    # && cp /mylib/camunda-platform-7-keycloak-run-7.17.0.jar /camunda/configuration/userlib"]
+    volumeMounts:
+    - name: camunda-platform-7-keycloak-run-jar
+      mountPath: /mylib
+
+extraVolumeMounts:
+  - name: camunda-platform-7-keycloak-run-jar
+    mountPath: /mylib
+    # mountPath: /camunda/configuration/userlib/camunda-platform-7-keycloak-run-7.17.0.jar
+    # subPath: camunda-platform-7-keycloak-run-7.17.0.jar
+  - name: camunda-keycloak-config
+    mountPath: /camunda/configuration/production.yml
+    subPath: production.yml
+
+extraVolumes:
+  - name: camunda-platform-7-keycloak-run-jar
+    emptyDir:
+      sizeLimit: 500Mi
+  - name: camunda-keycloak-config
+    configMap:
+      name: camunda-keycloak-config
+
+database:
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://workflow-database-postgresql.camunda.svc.cluster.local:5432/workflow
+  credentialsSecretName: workflow-database-credentials
+  credentialsSecretEnabled: true
+
+service:
+  type: ClusterIP
+  port: 8080
+  portName: http
+
+readinessProbe:
+  enabled: true
+  config:
+    httpGet:
+      path: /engine-rest/incident/count
+      port: http
+    initialDelaySeconds: 120
+    periodSeconds: 60
+
+prometheusServiceMonitor:
+  enabled: true
+
+metrics:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 9404
+    portName: metrics
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: "/"
+      prometheus.io/port: "9404"
+  # ingress:
+  #   enabled: true
+  #   host: "metrics.127.0.0.1.nip.io"
+
+ingress:
+  enabled: true
+  annotations: {
+      kubernetes.io/ingress.class: nginx,
+      kubernetes.io/affinity: "cookie",
+      kubernetes.io/affinity-mode: "persistent",
+      kubernetes.io/session-cookie-expires: "172800",
+      kubernetes.io/session-cookie-max-age: "172800",
+    }
+    # see more config options https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: camunda.127.0.0.1.nip.io
+      paths: ["/"]
+  tls:
+   - secretName: tls-secret
+  #    hosts:
+  #      - camunda-bpm-platform.local   - camunda-bpm-platform.local
+
+keycloak:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: "keycloak.127.0.0.1.nip.io"
+  extraEnvVars:
+    - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KEYCLOAK_FRONTEND_URL
+      value: "http://keycloak.127.0.0.1.nip.io"
+  auth:
+    adminUser: admin
+    adminPassword: admin
+    managementUser: camunda
+    managementPassword: camunda
+
+optimize:
+  enabled: true
+  env:
+   - name: CAMUNDA_OPTIMIZE_EMAIL_ACCESS_URL
+     value: "http://optimize.127.0.0.1.nip.io"
+  ingress:
+    enabled: true
+    host: "optimize.127.0.0.1.nip.io"
+
+elasticsearch:
+  enabled: true
+  imageTag: 7.17.3
+  replicas: 1
+  minimumMasterNodes: 1
+  # Allow no backup for single node setups
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512M"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+  # Request smaller persistent volumes.
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    storageClassName: standard
+    resources:
+      requests:
+        storage: 15Gi
