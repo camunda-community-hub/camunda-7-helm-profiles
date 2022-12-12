@@ -3,7 +3,12 @@
 ## Prerequisites
 - Download or clone the forked version of camunda-7-community-helm. This is a temporary measure until the camunda-community-hub/camunda-7-community-helm is updated.
 
-https://github.com/plungu/camunda-7-community-helm
+  https://github.com/paulhoot/camunda-7-community-helm
+
+- Point the Makefile to the chart where you placed it on your filesystem
+
+  chart ?= ../camunda-7-community-helm/charts/camunda-bpm-platform
+
 
 ## Profiles
 
