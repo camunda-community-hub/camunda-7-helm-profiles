@@ -1,5 +1,10 @@
 # Camunda 7 Helm Profiles
 
+## Prerequisites
+- Download or clone the forked version of camunda-7-community-helm. This is a temporary measure until the camunda-community-hub/camunda-7-community-helm is updated.
+
+https://github.com/plungu/camunda-7-community-helm
+
 ## Profiles
 
 - full-stack
@@ -7,7 +12,7 @@
 
 ### run make full-stack kind
 
-`make`
+`make certEmail=<<YOUR_EMAIL>>`
 
 ### run make development kind
 
@@ -24,7 +29,9 @@
 
 #### To access Graphana run port forward
 
-`kubectl port-forward metrics-grafana-6b4967c699-rxwbf 3000:3000 -n default`
+`kubectl get pods --all-namespaces`
+
+`kubectl port-forward metrics-grafana-<<your-pod-id>> 3000:3000 -n default`
 
 * Access Graphana at http://localhost:3000/ user/pass camunda/camunda
 
@@ -70,7 +77,7 @@ More info
 - [X] Camunda Optimize
 - [X] Metrics (Prometheus, Graphana)
 - [ ] Keycloak integration with Camunda to manage auth authorizations
-- [ ] Secure traffic with TLS, Kube Certmanger and Letsencrypt
+- [X] Secure traffic with TLS, Kube Certmanger and Letsencrypt
 - [ ] 2 App nodes, Webapps node and Headless REST api node  
 - [ ] LDAP integration for user/group management
 - [ ] Graphana dashboard for Camunda 7

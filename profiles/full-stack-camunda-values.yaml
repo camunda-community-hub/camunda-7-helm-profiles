@@ -103,8 +103,8 @@ ingress:
       paths: ["/"]
   tls:
    - secretName: tls-secret
-  #    hosts:
-  #      - camunda-bpm-platform.local   - camunda-bpm-platform.local
+     hosts:
+       - camunda.127.0.0.1.nip.io
 
 keycloak:
   ingress:
@@ -121,6 +121,8 @@ keycloak:
     adminPassword: admin
     managementUser: camunda
     managementPassword: camunda
+  tls:
+    enabled: true
 
 optimize:
   enabled: true
@@ -130,6 +132,10 @@ optimize:
   ingress:
     enabled: true
     host: "optimize.127.0.0.1.nip.io"
+    tls:
+      enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
 elasticsearch:
   enabled: true

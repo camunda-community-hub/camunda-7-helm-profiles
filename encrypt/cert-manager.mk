@@ -27,8 +27,8 @@ letsencrypt-prod-patch:
 
 .PHONY: annotate-ingress-tls
 annotate-ingress-tls:
-	kubectl -n $(namespace) annotate ingress camunda-camunda-platform cert-manager.io/cluster-issuer=letsencrypt
-	make get-ingress
+	kubectl -n $(namespace) annotate ingress camunda-bpm-platform cert-manager.io/cluster-issuer=letsencrypt
+	kubectl -n $(namespace) annotate ingress camunda-optimize cert-manager.io/cluster-issuer=letsencrypt
 
 # clean cert-manager and cluster issuer
 .PHONY: clean-cert-manager
