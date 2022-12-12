@@ -45,7 +45,10 @@ More info
 * Access keycloak at http://keycloak.127.0.0.1.nip.io user/pass admin/admin   
 
 
-## Architecture
+## Architecture & Components
+
+![C7 Architecture & Components]("https://raw.githubusercontent.com/camunda-community-hub/camunda-7-helm-profiles/44e176e1be9ed8149270973c235aaa4f119ce9cb/static/c7-components.jpg")
+
 
 ### Components
 - Camunda 7 Engine
@@ -63,17 +66,18 @@ More info
 
 
 Goals
-[X] Camunda 7 BPMN, DMN engine, and Webapps, RestAPI, Swagger
-[X] Camunda Optimize
-[X] Metrics (Prometheus, Graphana)
-[ ] Keycloak integration with Camunda to manage auth authorizations
-[ ] Secure traffic with TLS, Kube Certmanger and Letsencrypt
-[ ] LDAP integration for user/group management
-[ ] Graphana dashboard for Camunda 7
-[ ] Demo UI, Demo Data and C7 Client
-[ ] CockroachDB
-[ ] Graphana Ingress
-[ ] Vault auto password rotation
-[ ] GRPC external task client support
-[ ] Profile for AWS
-[ ] Profile for Azure
+- [X] Camunda 7 BPMN, DMN engine, and Webapps, RestAPI, Swagger
+- [X] Camunda Optimize
+- [X] Metrics (Prometheus, Graphana)
+- [ ] Keycloak integration with Camunda to manage auth authorizations
+- [ ] Secure traffic with TLS, Kube Certmanger and Letsencrypt
+- [ ] 2 App nodes, Webapps node and Headless REST api node  
+- [ ] LDAP integration for user/group management
+- [ ] Graphana dashboard for Camunda 7
+- [ ] Demo UI, Demo Data and C7 Client
+- [ ] CockroachDB
+- [ ] Graphana Ingress
+- [ ] Vault auto password rotation
+- [ ] GRPC external task client support
+- [ ] Profile for AWS
+- [ ] Profile for Azure
