@@ -14,8 +14,6 @@ image:
   tag: run-latest
   command: ['./camunda.sh']
   args: ['--production','--webapps','--rest','--swaggerui','--example']
-  # command: ["/bin/sh"]
-  # args: ["-c", "./camunda.sh --extraClassPath=/mylib"]
 
 extraEnvs:
 - name: DB_VALIDATE_ON_BORROW
@@ -34,9 +32,9 @@ initContainers:
 
 extraVolumeMounts:
   - name: camunda-platform-7-keycloak-run-jar
-    mountPath: /mylib
-    # mountPath: /camunda/configuration/userlib/camunda-platform-7-keycloak-run-7.17.0.jar
-    # subPath: camunda-platform-7-keycloak-run-7.17.0.jar
+    # mountPath: /mylib
+    mountPath: /camunda/configuration/userlib/camunda-platform-7-keycloak-run-7.17.0.jar
+    subPath: camunda-platform-7-keycloak-run-7.17.0.jar
   - name: camunda-keycloak-config
     mountPath: /camunda/configuration/production.yml
     subPath: production.yml
@@ -116,6 +114,18 @@ keycloak:
       value: "true"
     - name: KEYCLOAK_FRONTEND_URL
       value: "http://keycloak.127.0.0.1.nip.io"
+  extraVolumes:
+    - name: realm-secret
+      secret:
+        secretName: realm-secret
+  extraVolumeMounts:
+    - name: realm-secret
+      mountPath: "/realm/realm.json"
+      subPath: realm.json
+      readOnly: true
+  extraEnv:
+    - name: KEYCLOAK_IMPORT
+      value: /realm/realm.json
   auth:
     adminUser: admin
     adminPassword: admin

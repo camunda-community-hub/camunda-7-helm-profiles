@@ -17,15 +17,15 @@
 
 ### run make full-stack kind
 
-`make certEmail=<<YOUR_EMAIL>>`
+`make certEmail=<<YOUR_EMAIL>> chart=<<YOUR_PROJECTS>>/camunda-7-community-helm/charts/camunda-bpm-platform`
 
 ### run make development kind
 
-`make env=dev`
+`make kind-dev env=dev chart=...`
 
 ### run make development local
 
-`make local env=dev`
+`make local env=dev chart=...`
 
 
 ## Access Apps on profile (kind full-stack)
@@ -54,6 +54,8 @@ More info
 
 ### Keycloak
 
+You must upload the keycloak/realm.json using the Keycloak admin console. Got to Realm dropdown and add realm. (This is a temporary measure the realm setting will be applied using a configmap in the future)
+
 * Access keycloak at http://keycloak.127.0.0.1.nip.io user/pass admin/admin   
 
 
@@ -61,12 +63,18 @@ More info
 
 ![C7 Architecture & Components](https://raw.githubusercontent.com/camunda-community-hub/camunda-7-helm-profiles/44e176e1be9ed8149270973c235aaa4f119ce9cb/static/c7-components.jpg)
 
+### Integration
+- The primary method of interacting with the Camunda 7 engine is with the REST Api.
+- Integration with other systems is done using the External Task Client.
+- Integration with user tasks is through the Task Api and using the C7 Client as a abstraction
+- Authorization and Authentication is done through Keycloak securing the Camunda7 Webapps and the REST api.
 
 ### Components
 - Camunda 7 Engine
 - DMN Engine
 - Spring-Boot (Camunda-Run)
 - Camunda 7 Web Apps (Cockpit, Tasklist, Admin)
+- External Task Client (Java SpringBoot)
 - Prometheus
 - Graphana
 - Keycloak
@@ -81,7 +89,7 @@ More info
 - [X] Camunda 7 BPMN, DMN engine, and Webapps, RestAPI, Swagger
 - [X] Camunda Optimize
 - [X] Metrics (Prometheus, Graphana)
-- [ ] Keycloak integration with Camunda to manage auth authorizations
+- [ ] Keycloak integration with Camunda to manage authentication and authorizations
 - [X] Secure traffic with TLS, Kube Certmanger and Letsencrypt
 - [ ] 2 App nodes, Webapps node and Headless REST api node  
 - [ ] LDAP integration for user/group management

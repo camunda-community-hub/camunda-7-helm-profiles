@@ -39,12 +39,6 @@ dbSecretName ?= workflow-database-credentials
 dbUserName ?= workflow
 dbPassword ?= workflow
 
-# .PHONY: kind
-# kind: kube namespace \
-# 	postgres \
-# 	create-camunda-keycloak-config \
-# 	camunda
-
 .PHONY: kind
 kind: kube namespace \
 postgres \
@@ -53,7 +47,10 @@ ingress-nginx-kind \
 create-camunda-keycloak-config \
 camunda \
 annotate-ingress-tls \
-metrics urls
+#metrics urls
+
+.PHONY: kind-dev
+kind-dev: kube namespace postgres ingress-nginx-kind camunda urls
 
 .PHONY: local
 local: namespace postgres ingress camunda urls

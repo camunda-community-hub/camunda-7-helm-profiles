@@ -29,9 +29,12 @@ config-keycloak: keycloak-password
 	kubectl -n $(namespace) exec -it $(release)-keycloak-0 -- /opt/bitnami/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://localhost:8080/auth --realm master --user admin --password $(kcPassword)
 	kubectl -n $(namespace) exec -it $(release)-keycloak-0 -- /opt/bitnami/keycloak/bin/kcadm.sh update realms/camunda-platform -s sslRequired=NONE --server http://localhost:8080/auth --realm master --user admin --password $(kcPassword)
 
-.PHONY: clean-camunda clean-postgres
+.PHONY: clean-camunda
 clean-camunda:
 	-helm --namespace $(namespace) uninstall $(release)
+
+.PHONY: clean-all 
+clean-all: clean-camunda clean-postgres
 	-kubectl delete -n $(namespace) pvc -l app.kubernetes.io/instance=$(release)
 	-kubectl delete -n $(namespace) pvc -l app=elasticsearch-master
 	-kubectl delete namespace $(namespace)
