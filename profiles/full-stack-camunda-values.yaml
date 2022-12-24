@@ -114,6 +114,8 @@ keycloak:
       value: "true"
     - name: KEYCLOAK_FRONTEND_URL
       value: "http://keycloak.127.0.0.1.nip.io"
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: "-Dkeycloak.import=/realm/realm.json"
   extraVolumes:
     - name: realm-secret
       secret:

@@ -674,7 +674,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "LtObO5ILz9qPr2CkcfaBp7FsZ6Q1WzCN",
       "redirectUris": [
         "http://keycloak.127.0.0.1.nip.io/login"
       ],

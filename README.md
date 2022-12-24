@@ -54,10 +54,11 @@ More info
 
 ### Keycloak
 
-You must upload the keycloak/realm.json using the Keycloak admin console. Got to Realm dropdown and add realm. (This is a temporary measure the realm setting will be applied using a configmap in the future)
+You must add a user (demo/demo) to the Keycloak Camunda Realm and in the camunda-admin group.
 
 * Access keycloak at http://keycloak.127.0.0.1.nip.io user/pass admin/admin   
 
+NOTE: if you change the Keycloak client secret in keycloak/production.yml you must update keycloak/realm.json
 
 ## Architecture & Components
 
@@ -84,19 +85,18 @@ You must upload the keycloak/realm.json using the Keycloak admin console. Got to
 - Kubernetes (container orchestration)
 - Docker
 
-
 ### Goals
 - [X] Camunda 7 BPMN, DMN engine, and Webapps, RestAPI, Swagger
 - [X] Camunda Optimize
 - [X] Metrics (Prometheus, Graphana)
-- [ ] Keycloak integration with Camunda to manage authentication and authorizations
+- [X] Keycloak integration with Camunda to manage authentication and authorizations
 - [X] Secure traffic with TLS, Kube Certmanger and Letsencrypt
-- [ ] 2 App nodes, Webapps node and Headless REST api node  
 - [ ] LDAP integration for user/group management
+- [ ] Separate deployment of Webapps node and Headless REST api node  
 - [ ] Graphana dashboard for Camunda 7
+- [ ] Graphana Ingress
 - [ ] Demo UI, Demo Data and C7 Client
 - [ ] CockroachDB
-- [ ] Graphana Ingress
 - [ ] Vault auto password rotation
 - [ ] GRPC external task client support
 - [ ] Profile for AWS

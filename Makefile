@@ -47,7 +47,7 @@ ingress-nginx-kind \
 create-camunda-keycloak-config \
 camunda \
 annotate-ingress-tls \
-#metrics urls
+metrics urls
 
 .PHONY: kind-dev
 kind-dev: kube namespace postgres ingress-nginx-kind camunda urls
