@@ -44,6 +44,7 @@ kind: kube namespace \
 postgres \
 cert-manager letsencrypt-staging \
 ingress-nginx-kind \
+kube-apply-apacheds \
 create-camunda-keycloak-config \
 camunda \
 annotate-ingress-tls \
@@ -64,22 +65,9 @@ ingress: ingress-kind
 .PHONY: clean
 clean: clean-camunda clean-postgres clean-ingress clean-kube
 
-.PHONY: download-camunda-keycloak-jar
-download-camunda-keycloak-jar: jar
-
-.PHONY: delete-camunda-keycloak-jar
-delete-camunda-keycloak-jar: rm-jar
-
-# .PHONY: url-grafana
-# url-grafana:
-# 	@echo "http://`kubectl get svc metrics-grafana-loadbalancer -n default -o 'custom-columns=ip:status.loadBalancer.ingress[0].ip' | tail -n 1`/d/I4lo7_EZk/zeebe?var-namespace=$(namespace)"
-
-# .PHONY: open-grafana
-# open-grafana:
-# 	xdg-open http://$(shell kubectl get services metrics-grafana-loadbalancer -n default -o jsonpath={..ip})/d/I4lo7_EZk/zeebe?var-namespace=$(namespace) &
-
+# include ./encrypt/cfssl/cfssl-certs.mk
+include ./apacheds/apacheds.mk
 include ./kind/kubernetes-kind.mk
-# include $(helmProfilesDir)/certs/tls-certs.mk
 include ./encrypt/cert-manager.mk
 include ./keycloak/keycloak.mk
 include ./metrics/metrics.mk

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apacheds-service
+  labels:
+    app: apacheds
+spec:
+  selector:
+    app: apacheds
+  type: ClusterIP
+  ports:
+  - name: ldap
+    protocol: TCP
+    port: 10389
+    targetPort: ldap

@@ -1,0 +1,110 @@
+version: 1
+dn: ou=groups,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+dn: ou=tenants1,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: tenants1
+
+dn: ou=tenants2,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: tenants2
+
+dn: ou=people,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: people
+
+dn: cn=judy,ou=people,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: judy
+sn: jones
+mail: judy.jones@camunda.com
+uid: judy
+userPassword: {SSHA}PXt6kJL7dU6eJITovqwlgo5SRM6Ouuq4kHf6Dw==
+
+dn: cn=john,ou=people,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: john
+sn: doe
+mail: john.doe@camunda.com
+uid: john
+userPassword: {SSHA}j0RbH7X7Eq3sRO/rWb7/tnVqqGxd8mwwiZgRJA==
+
+dn: cn=joe,ou=people,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: joe
+sn: smith
+mail: joe.smith@camunda.com
+uid: joe
+userPassword: {SSHA}lrkjK/DA8K2SI5LoOpxmwNWHM4xJmrLipo13Vw==
+
+dn: cn=jane,ou=people,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: jane
+sn: deer
+mail: jane.deer@camunda.com
+uid: jane
+userPassword: {SSHA}7jRbRtyiSDAaxTnSlh2D2Tv87xgLCs40khQlYg==
+
+dn: cn=demo,ou=people,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: demo
+sn: demo
+mail: demo@camunda.com
+uid: demo
+userPassword: {SSHA}9EADx9fGvsSlMFUzFjmvLu443+MNCHnT
+
+dn: cn=all-users,ou=groups,dc=example,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: all-users
+member: cn=joe,ou=people,dc=example,dc=com
+member: cn=jane,ou=people,dc=example,dc=com
+member: cn=judy,ou=people,dc=example,dc=com
+member: cn=john,ou=people,dc=example,dc=com
+
+dn: cn=camunda-users,ou=groups,dc=example,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: camunda-users
+member: cn=john,ou=people,dc=example,dc=com
+
+dn: cn=camunda-admins,ou=groups,dc=example,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: camunda-admins
+member: cn=demo,ou=people,dc=example,dc=com
+
+dn: cn=tenant1,ou=tenants1,dc=example,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: tenant1
+member: cn=joe,ou=people,dc=example,dc=com
+member: cn=jane,ou=people,dc=example,dc=com
+
+dn: cn=tenant2,ou=tenants2,dc=example,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: tenant2
+member: cn=judy,ou=people,dc=example,dc=com
+member: cn=john,ou=people,dc=example,dc=com
