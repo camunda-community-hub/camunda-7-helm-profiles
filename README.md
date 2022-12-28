@@ -2,7 +2,7 @@
 
 ## Architecture & Components
 
-![C7 Architecture & Components](https://raw.githubusercontent.com/camunda-community-hub/camunda-7-helm-profiles/44e176e1be9ed8149270973c235aaa4f119ce9cb/static/c7-components.jpg)
+![C7 Architecture & Components](https://github.com/camunda-community-hub/camunda-7-helm-profiles/blob/main/static/c7-components.jpg)
 
 ### Integration
 - The primary method of interacting with the Camunda 7 engine is with the REST Api.
