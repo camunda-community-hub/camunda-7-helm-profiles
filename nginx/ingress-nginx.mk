@@ -1,9 +1,16 @@
 .PHONY: ingress
-ingress: install-ingress-nginx
+ingress: ingress-nginx
+
+.PHONY: ingress-nginx
+ingress-nginx:
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+	helm repo update ingress-nginx
+	helm search repo ingress-nginx
+	helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace --wait
 
 .PHONY: install-ingress-nginx
-ingress-nginx: create-ingress-nginx-namespace add-nginx-repo
-	helm install nginx-stable nginx-stable/nginx-ingress --namespace ingress-nginx
+install-ingress-nginx: create-ingress-nginx-namespace add-nginx-repo
+	helm install nginx-stable nginx-stable/nginx-ingress --namespace ingress-nginx --create-namespace --wait
 
 .PHONY: install-ingress-nginx-tls
 install-ingress-nginx-tls: create-ingress-nginx-namespace add-kube-nginx-repo
@@ -11,8 +18,28 @@ install-ingress-nginx-tls: create-ingress-nginx-namespace add-kube-nginx-repo
 	--set controller.service.annotations."nginx\.ingress.kubernetes.io/ssl-redirect"="true" \
 	--set controller.service.annotations."cert-manager.io/cluster-issuer"="letsencrypt"
 
+.PHONY: ingress-ip-from-service
+ingress-ip-from-service:
+	$(eval IP := $(shell kubectl get service -w ingress-nginx-controller -o 'go-template={{with .status.loadBalancer.ingress}}{{range .}}{{.ip}}{{"\n"}}{{end}}{{.err}}{{end}}' -n ingress-nginx 2>/dev/null | head -n1))
+	@echo "Ingress controller uses IP address: $(IP)"
+
+.PHONY: ingress-hostname-from-service
+ingress-hostname-from-service:
+	$(eval IP := $(shell kubectl get service -w ingress-nginx-controller -o 'go-template={{with .status.loadBalancer.ingress}}{{range .}}{{.hostname}}{{"\n"}}{{end}}{{.err}}{{end}}' -n ingress-nginx 2>/dev/null | head -n1))
+	@echo "Ingress controller uses hostname: $(IP)"
+
+# If `baseDomainName` is set to `nip.io`, then find ip address from service to create fully qualified domain name
+# Otherwise, just use domain name that was specified in Makefile
+.PHONY: fqdn
+fqdn: ingress-ip-from-service
+	$(eval fqdn ?= $(shell if [ "$(baseDomainName)" == "nip.io" ]; then echo "$(dnsLabel).$(IP).$(baseDomainName)"; else echo "$(dnsLabel).$(baseDomainName)"; fi))
+	@echo "Fully qualified domain name is: $(fqdn)"
+
+camunda-values-nginx.yaml: fqdn
+	sed "s/127.0.0.1/$(fqdn)/g;" $(root)/profiles/$(profile)-camunda-values.yaml > ./camunda-values.yaml; \
+
 .PHONY: install-ingress-nginx-azure
-install-ingress-nginx-tls: create-ingress-nginx-namespace add-kube-nginx-repo
+install-ingress-nginx-azure: create-ingress-nginx-namespace add-kube-nginx-repo
 	helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --wait \
 	--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$(dnsLabel) \
 	--set controller.service.annotations."nginx\.ingress.kubernetes.io/ssl-redirect"="true" \

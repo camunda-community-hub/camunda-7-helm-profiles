@@ -6,14 +6,14 @@
 # Custom values.yaml
 
 general:
-  fullnameOverride: camunda-bpm-platform-v7-rest
-  replicaCount: 1
+  fullnameOverride: camunda-bpm-platform
+  replicaCount: 2
 
 image:
   name: camunda/camunda-bpm-platform
   tag: run-latest
   command: ['./camunda.sh']
-  args: ['']
+  args: ['--webapps','--rest','--swaggerui','--example']
 
 extraEnvs:
 - name: DB_VALIDATE_ON_BORROW
@@ -21,7 +21,7 @@ extraEnvs:
 
 database:
   driver: org.postgresql.Driver
-  url: jdbc:postgresql://workflow-database-postgresql.camunda.svc.cluster.local:5432/workflow
+  url: jdbc:postgresql://workflow-database-postgresql.postgres.svc.cluster.local:5432/workflow
   credentialsSecretName: workflow-database-credentials
   credentialsSecretEnabled: true
 
@@ -40,7 +40,7 @@ readinessProbe:
     periodSeconds: 60
 
 metrics:
-  enabled: true
+  enabled: false
   service:
     type: ClusterIP
     port: 9404
@@ -54,10 +54,10 @@ ingress:
   enabled: true
   annotations: {
       kubernetes.io/ingress.class: nginx,
-      kubernetes.io/affinity: "cookie",
-      kubernetes.io/affinity-mode: "persistent",
-      kubernetes.io/session-cookie-expires: "172800",
-      kubernetes.io/session-cookie-max-age: "172800",
+      nginx.ingress.kubernetes.io/affinity: "cookie",
+      nginx.ingress.kubernetes.io/affinity-mode: "persistent",
+      nginx.ingress.kubernetes.io/session-cookie-expires: "172800",
+      nginx.ingress.kubernetes.io/session-cookie-max-age: "172800",
     }
     # see more config options https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/
     # kubernetes.io/ingress.class: nginx
@@ -102,3 +102,6 @@ elasticsearch:
     resources:
       requests:
         storage: 15Gi
+
+keycloak:
+  enabled: false

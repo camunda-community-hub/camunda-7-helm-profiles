@@ -20,7 +20,7 @@ create-secret:
     $(dbSecretName) \
     --from-literal=DB_USERNAME=$(dbUserName) \
     --from-literal=DB_PASSWORD=$(dbPassword) \
-		--namespace $(dbNamespace)
+		--namespace $(namespace)
 
 .PHONY: clean-postgres
 clean-postgres:

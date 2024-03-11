@@ -3,12 +3,12 @@ kube:
 	kind create cluster --config=./kind/config.yaml
 	kubectl apply -f ./kind/ssd-storageclass-kind.yaml
 
-.PHONY: clean-kube
-clean-kube: use-kube
+.PHONY: clean-kube-kind
+clean-kube-kind: use-kube-kind
 	kind delete cluster --name camunda-kind-cluster
 
-.PHONY: use-kube
-use-kube:
+.PHONY: use-kube-kind
+use-kube-kind:
 	kubectl config use-context kind-camunda-kind-cluster
 
 .PHONY: urls

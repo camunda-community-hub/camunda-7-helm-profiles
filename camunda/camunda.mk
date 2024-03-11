@@ -7,6 +7,17 @@ camunda: namespace
 	helm search repo $(chart)
 	helm install --namespace $(namespace) $(release) $(chart) -f $(chartValues) --skip-crds --debug
 
+.PHONY: upgrade-camunda
+upgrade-camunda:
+	@echo "Attempting to upgrade camunda7 using chartValues: $(chartValues)"
+	# -helm dependency build
+	-helm repo add camunda7 https://helm.cch.camunda.cloud
+	-helm repo update camunda7
+	helm search repo $(chart)
+	POSTGRES_PASSWORD=$$(kubectl get secret --namespace "camunda" workflow-database-credentials -o jsonpath="{.data.DB_PASSWORD}" | base64 --decode); \
+	helm upgrade --namespace $(namespace) $(release) $(chart) -f $(chartValues) --skip-crds --debug \
+		--set global.postgresql.auth.postgresPassword=$$POSTGRES_PASSWORD
+
 .PHONY: namespace
 namespace:
 	-kubectl create namespace $(namespace)
@@ -33,7 +44,7 @@ config-keycloak: keycloak-password
 clean-camunda:
 	-helm --namespace $(namespace) uninstall $(release)
 
-.PHONY: clean-all 
+.PHONY: clean-all
 clean-all: clean-camunda clean-postgres
 	-kubectl delete -n $(namespace) pvc -l app.kubernetes.io/instance=$(release)
 	-kubectl delete -n $(namespace) pvc -l app=elasticsearch-master
